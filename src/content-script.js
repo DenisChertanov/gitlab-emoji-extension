@@ -64,6 +64,19 @@ function prepareEditorBlock(editorBlock) {
     });
 }
 
+function test() {
+    const emojis = ["shrug", "apple", "orange", "tomato", "smile", "funny", "cat", "dog", "potato"];
+
+    const randomIndex = Math.floor(Math.random() * emojis.length);
+    const usedEmoji = emojis[randomIndex];
+    console.log("content-script use emoji:", usedEmoji);
+
+    let message = {type: "EMOJI_USAGE", emoji: usedEmoji};
+    chrome.runtime.sendMessage(message, (response) => {
+        console.log("content-script receive response:", response);
+    });
+}
+
 function insertEmojiTag({
     textArea,
     tag,
