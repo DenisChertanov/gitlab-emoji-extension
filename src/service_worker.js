@@ -21,6 +21,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (type === "LAST_USAGED_EMOJIS") {
         sendResponse(Array.from(lastUsagedEmojis));
     }
+
+    if (type === "RANDOM_EMOJI") {
+        const randomSectionIndex = Math.floor(Math.random() * emojis.length);
+        const randomEmojiIndex = Math.floor(Math.random() * emojis[randomSectionIndex].emojis.length);
+        const usedEmoji = emojis[randomSectionIndex].emojis[randomEmojiIndex];
+        sendResponse(usedEmoji);
+    }
 });
 
 function processEmojiUsage(emoji) {

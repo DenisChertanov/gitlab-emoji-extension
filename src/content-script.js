@@ -56,24 +56,22 @@ function prepareEditorBlock(editorBlock) {
 
     // Logic for emoji button
     emojiButton.addEventListener("click", () => {
-        insertEmojiTag({
-            textArea: editorBlock.querySelector("textarea"),
-            tag: ':shrug:',
-            cursorOffset: 0
+        //test
+        let message = {type: "RANDOM_EMOJI"};
+        chrome.runtime.sendMessage(message, (response) => {
+            console.log("random emoji:", response);
+            insertEmojiTag({
+                textArea: editorBlock.querySelector("textarea"),
+                tag: response.code,
+                cursorOffset: 0
+            });
         });
-    });
-}
 
-function test() {
-    const emojis = ["shrug", "apple", "orange", "tomato", "smile", "funny", "cat", "dog", "potato"];
-
-    const randomIndex = Math.floor(Math.random() * emojis.length);
-    const usedEmoji = emojis[randomIndex];
-    console.log("content-script use emoji:", usedEmoji);
-
-    let message = {type: "EMOJI_USAGE", emoji: usedEmoji};
-    chrome.runtime.sendMessage(message, (response) => {
-        console.log("content-script receive response:", response);
+        // insertEmojiTag({
+        //     textArea: editorBlock.querySelector("textarea"),
+        //     tag: ":shrug:",
+        //     cursorOffset: 0
+        // });
     });
 }
 
@@ -88,6 +86,11 @@ function insertEmojiTag({
     }
 
     insertText(textArea, tag + " ");
+
+    let message = {type: "EMOJI_USAGE", emoji: tag};
+    chrome.runtime.sendMessage(message, (response) => {
+        // console.log("content-script receive response:", response);
+    });
 
     return moveCursor({
         textArea,
