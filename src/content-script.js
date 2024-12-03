@@ -158,3 +158,4 @@ function moveCursor({
         return textArea.setSelectionRange(pos, pos);
     }
 }
+

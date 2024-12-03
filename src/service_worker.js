@@ -1,3 +1,12 @@
+// Upload emojis
+let emojis;
+fetch(chrome.runtime.getURL("emojis.json"))
+    .then(response => response.json())
+    .then(data => {
+        emojis = data;
+    });
+
+// Process emoji usages
 const lastUsageEmojisMaxSize = 4;
 let lastUsagedEmojis = new Set();
 
@@ -27,3 +36,4 @@ function processEmojiUsage(emoji) {
 
     console.log("service_worker lastUsagedEmojis:", lastUsagedEmojis);
 }
+

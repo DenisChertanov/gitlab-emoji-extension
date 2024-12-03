@@ -32,7 +32,8 @@
         {
             "resources": [
                 "content-script.css",
-                "execute.js"
+                "execute.js",
+                "emojis.json"
             ],
             "matches": [
                 "https://gitlab.services.mts.ru/*"
