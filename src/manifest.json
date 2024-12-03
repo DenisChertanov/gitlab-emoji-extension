@@ -1,0 +1,22 @@
+{
+    "name": "__MSG_name__",
+    "version": "1.0.0",
+    "manifest_version": 2,
+    "default_locale": "en",
+    "description": "__MSG_description__",
+    "icons": {
+      "32": "./icons/crying_emoji_32.png",
+      "64": "./icons/crying_emoji_64.png",
+      "128": "./icons/crying_emoji_128.png"
+    },
+    "content_scripts": [
+      {
+        "matches": ["https://gitlab.services.mts.ru/*"],
+        "run_at": "document_idle",
+        "all_frames": false,
+        "js": ["content-script.js"]
+      }
+    ],
+    "permissions": ["storage", "https://gitlab.services.mts.ru/*"],
+    "web_accessible_resources": ["content-script.css", "execute.js"]
+  }
