@@ -12,7 +12,7 @@ const config = (env, argv) =>
       content_script: PATHS.src + '/content_script.js',
       service_worker: PATHS.src + '/service_worker.js',
       execute: PATHS.src + '/execute.js',
-      AppTranspiled: PATHS.src + '/AppTranspiled.js',
+      MyEmojiPickerTranspiled: PATHS.src + '/MyEmojiPickerTranspiled.js',
     },
     devtool: argv.mode === 'production' ? false : 'source-map',
   });

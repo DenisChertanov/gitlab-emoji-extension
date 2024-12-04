@@ -1,9 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import App from "./AppTranspiled.js";
-
-// import data from "@emoji-mart/data";
-// import Picker from "@emoji-mart/react";
+import MyEmojiPicker from "./MyEmojiPickerTranspiled.js";
 
 // Logic for existing edit blocks
 const editorBlockList = document.getElementsByClassName("js-vue-markdown-field");
@@ -44,7 +41,8 @@ function prepareEditorBlock(editorBlock) {
     svgButtonImg.setAttribute("role", "img");
     svgButtonImg.setAttribute("aria-hiden", "true");
     const svgButtomImgImg = document.createElementNS('http://www.w3.org/2000/svg', 'use');
-    svgButtomImgImg.setAttribute("href", "https://gitlab.services.mts.ru/assets/icons-85d93222827a1ed673b1e26461ae6f00a6fa0cece63b29a2dff3cb8f74f65829.svg#slight-smile");
+    // svgButtomImgImg.setAttribute("href", "https://gitlab.services.mts.ru/assets/icons-85d93222827a1ed673b1e26461ae6f00a6fa0cece63b29a2dff3cb8f74f65829.svg#slight-smile");
+    svgButtomImgImg.setAttribute("href", "https://www.svgrepo.com/show/535115/alien.svg");
     svgButtonImg.appendChild(svgButtomImgImg);
     emojiButton.appendChild(svgButtonImg);
 
@@ -81,21 +79,10 @@ function prepareEditorBlock(editorBlock) {
         // });
     });
 
-
-
-    // const pickerOptions = { onEmojiSelect: console.log };
-    // const picker = new Picker(pickerOptions);
-    // picker.style.display = 'block';
-    // picker.style.position = 'absolute';
-    // picker.style.zIndex = '10000';
-    // picker.style.height = '200px';
-
-    // const picker = React.createElement("Picker");
-    // toolBarDiv.appendChild(picker);
-
+    // Test emoji picker
     const picker = document.createElement("div");
-    ReactDOM.render(React.createElement(App, null), picker);
-    // toolBarDiv.appendChild(picker);
+    ReactDOM.render(React.createElement(MyEmojiPicker, null), picker);
+    toolBarDiv.appendChild(picker);
 }
 
 function insertEmojiTag({

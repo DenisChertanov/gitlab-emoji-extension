@@ -12,7 +12,7 @@
   "content_scripts": [
       {
           "matches": [
-              "https://gitlab.services.mts.ru/*"
+              "https://gitlab.com/*"
           ],
           "run_at": "document_idle",
           "all_frames": false,
@@ -37,7 +37,7 @@
               "browser.js"
           ],
           "matches": [
-              "https://gitlab.services.mts.ru/*"
+              "https://gitlab.com/*"
           ]
       }
   ]
