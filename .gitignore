@@ -1,35 +1,15 @@
-HELP.md
-.gradle
-build/
-!gradle/wrapper/gradle-wrapper.jar
-!**/src/main/**
-!**/src/test/**
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
+# dependencies
+/node_modules
 
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-out/
+# production
+/build
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
+# misc
+.DS_Store
 
-### VS Code ###
-.vscode/
+npm-debug.log*
 
-**/*CLR*
-**/.DS_Store
+# packed files
+/release
