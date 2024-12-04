@@ -53,3 +53,17 @@ function processEmojiUsage(emoji) {
 
     console.log("service_worker lastUsagedEmojis:", lastUsagedEmojis);
 }
+
+import React from "react";
+import data from "@emoji-mart/data";
+import Picker from "@emoji-mart/react";
+
+React.createElement("Picker");
+
+// function buildEmojiPicker() {
+//     return (
+//         <div className="container">
+//           <Picker data={data} onEmojiSelect={console.log} />
+//         </div>
+//       );
+// }

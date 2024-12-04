@@ -1,3 +1,10 @@
+import React from "react";
+import ReactDOM from "react-dom";
+import App from "./AppTranspiled.js";
+
+// import data from "@emoji-mart/data";
+// import Picker from "@emoji-mart/react";
+
 // Logic for existing edit blocks
 const editorBlockList = document.getElementsByClassName("js-vue-markdown-field");
 [...editorBlockList].forEach((editorBlock) => {
@@ -73,6 +80,22 @@ function prepareEditorBlock(editorBlock) {
         //     cursorOffset: 0
         // });
     });
+
+
+
+    // const pickerOptions = { onEmojiSelect: console.log };
+    // const picker = new Picker(pickerOptions);
+    // picker.style.display = 'block';
+    // picker.style.position = 'absolute';
+    // picker.style.zIndex = '10000';
+    // picker.style.height = '200px';
+
+    // const picker = React.createElement("Picker");
+    // toolBarDiv.appendChild(picker);
+
+    const picker = document.createElement("div");
+    ReactDOM.render(React.createElement(App, null), picker);
+    // toolBarDiv.appendChild(picker);
 }
 
 function insertEmojiTag({
@@ -161,40 +184,3 @@ function moveCursor({
         return textArea.setSelectionRange(pos, pos);
     }
 }
-
-
-// const toolbars = document.querySelectorAll('div[data-testid="formatting-toolbar"], div[data-testid="formatting-toolbar"]');
-// toolbars.forEach(toolbar => {
-//     if (!toolbar) return;
-//     console.log(toolbar);
-//     const emojiButton = document.createElement('button');
-//     emojiButton.style.border = 'none';
-//     emojiButton.style.background = 'none';
-//     emojiButton.textContent = '😊';
-//     emojiButton.style.cursor = 'pointer';
-//     emojiButton.style.marginLeft = '5px';
-
-//     // Picker-Optionen und Picker erstellen
-//     function handleEmojiSelect(emoji) {
-
-//         const editableDiv = toolbar.nextElementSibling.querySelector('div[contenteditable="true"]');
-//         if (editableDiv) {
-//             editableDiv.textContent += emoji.native;
-//         }
-//         picker.style.display = 'none';
-//     }
-
-//     const pickerOptions = { onEmojiSelect: handleEmojiSelect };
-//     const picker = new EmojiMart.Picker(pickerOptions);
-//     picker.style.display = 'none';
-//     picker.style.position = 'absolute';
-//     picker.style.zIndex = '10000';
-//     picker.style.height = '200px';
-
-//     emojiButton.addEventListener('click', function (event) {
-//         picker.style.display = picker.style.display === 'none' ? 'block' : 'none';
-//     });
-
-//     toolbar.appendChild(emojiButton);
-//     toolbar.appendChild(picker);
-// });
