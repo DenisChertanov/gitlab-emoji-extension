@@ -57,7 +57,7 @@ function prepareEditorBlock(editorBlock) {
     // Logic for emoji button
     emojiButton.addEventListener("click", () => {
         //test
-        let message = {type: "RANDOM_EMOJI"};
+        let message = { type: "RANDOM_EMOJI" };
         chrome.runtime.sendMessage(message, (response) => {
             console.log("random emoji:", response);
             insertEmojiTag({
@@ -87,7 +87,7 @@ function insertEmojiTag({
 
     insertText(textArea, tag + " ");
 
-    let message = {type: "EMOJI_USAGE", emoji: tag};
+    let message = { type: "EMOJI_USAGE", emoji: tag };
     chrome.runtime.sendMessage(message, (response) => {
         // console.log("content-script receive response:", response);
     });
@@ -161,4 +161,41 @@ function moveCursor({
         return textArea.setSelectionRange(pos, pos);
     }
 }
+
+
+const toolbars = document.querySelectorAll('div[data-testid="formatting-toolbar"], div[data-testid="formatting-toolbar"]');
+toolbars.forEach(toolbar => {
+    if (!toolbar) return;
+    console.log(toolbar);
+    const emojiButton = document.createElement('button');
+    emojiButton.style.border = 'none';
+    emojiButton.style.background = 'none';
+    emojiButton.textContent = '😊';
+    emojiButton.style.cursor = 'pointer';
+    emojiButton.style.marginLeft = '5px';
+
+    // Picker-Optionen und Picker erstellen
+    function handleEmojiSelect(emoji) {
+
+        const editableDiv = toolbar.nextElementSibling.querySelector('div[contenteditable="true"]');
+        if (editableDiv) {
+            editableDiv.textContent += emoji.native;
+        }
+        picker.style.display = 'none';
+    }
+
+    const pickerOptions = { onEmojiSelect: handleEmojiSelect };
+    const picker = new EmojiMart.Picker(pickerOptions);
+    picker.style.display = 'none';
+    picker.style.position = 'absolute';
+    picker.style.zIndex = '10000';
+    picker.style.height = '200px';
+
+    emojiButton.addEventListener('click', function (event) {
+        picker.style.display = picker.style.display === 'none' ? 'block' : 'none';
+    });
+
+    toolbar.appendChild(emojiButton);
+    toolbar.appendChild(picker);
+});
 

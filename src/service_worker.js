@@ -8,7 +8,15 @@ fetch(chrome.runtime.getURL("emojis.json"))
 
 // Process emoji usages
 const lastUsageEmojisMaxSize = 4;
-let lastUsagedEmojis = new Set();
+let lastUsagedEmojis;
+
+chrome.storage.local.get(['lastUsagedEmojisSave'], function (data) {
+    lastUsagedEmojis = data.lastUsagedEmojisSave;
+
+    if (lastUsagedEmojis === undefined) {
+        lastUsagedEmojis = new Set();
+    }
+});
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     const { type, value, emoji } = message;
@@ -40,6 +48,8 @@ function processEmojiUsage(emoji) {
         const [firstElement] = lastUsagedEmojis;
         lastUsagedEmojis.delete(firstElement);
     }
+
+    chrome.storage.local.set({ 'lastUsagedEmojisSave': lastUsagedEmojis });
 
     console.log("service_worker lastUsagedEmojis:", lastUsagedEmojis);
 }
