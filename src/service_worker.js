@@ -1,33 +1,17 @@
-// Upload emojis
-let emojis;
-fetch(chrome.runtime.getURL("emojis.json"))
-    .then(response => response.json())
-    .then(data => {
-        emojis = data;
-    });
-
 // Process emoji usages
-const lastUsageEmojisMaxSize = 4;
-let lastUsagedEmojis;
-
-chrome.storage.local.get(['lastUsagedEmojisSave'], function (data) {
-    lastUsagedEmojis = data.lastUsagedEmojisSave;
-
-    if (lastUsagedEmojis === undefined) {
-        lastUsagedEmojis = new Set();
-    }
-});
+const lastUsageEmojisMaxSize = 45;
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     const { type, value, emoji } = message;
 
     if (type === "EMOJI_USAGE") {
         processEmojiUsage(emoji);
-        sendResponse(Array.from(lastUsagedEmojis));
+        // sendResponse(Array.from(lastUsagedEmojis));
     }
 
     if (type === "LAST_USAGED_EMOJIS") {
-        sendResponse(Array.from(lastUsagedEmojis));
+        // sendResponse(Array.from(lastUsagedEmojis));
+        sendResponse(getLastUsagedEmojis());
     }
 
     if (type === "RANDOM_EMOJI") {
@@ -38,7 +22,31 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
 });
 
-function processEmojiUsage(emoji) {
+async function getLastUsagedEmojis() {
+    let lastUsagedEmojis = await chrome.storage.local.get(["lastUsagedEmojisSave"], function(items) {
+        console.log("ppp");
+        console.log(items.lastUsagedEmojisSave);
+        // console.log(items[0].lastUsagedEmojisSave);
+    });
+    // lastUsagedEmojis = window.localStorage.getItem('lastUsagedEmojisSave');
+
+    if (lastUsagedEmojis === undefined) {
+        lastUsagedEmojis = new Set();
+    }
+    if (lastUsagedEmojis instanceof Set) {
+        // do nothing
+    } else {
+        lastUsagedEmojis = new Set();
+    }
+
+    console.log("ddd");
+    console.log(lastUsagedEmojis);
+    return lastUsagedEmojis;
+}
+
+async function processEmojiUsage(emoji) {
+    let lastUsagedEmojis = await getLastUsagedEmojis();
+
     if (lastUsagedEmojis.has(emoji)) {
         lastUsagedEmojis.delete(emoji);
     }
@@ -49,21 +57,11 @@ function processEmojiUsage(emoji) {
         lastUsagedEmojis.delete(firstElement);
     }
 
-    chrome.storage.local.set({ 'lastUsagedEmojisSave': lastUsagedEmojis });
+    await chrome.storage.local.set({ 'lastUsagedEmojisSave': lastUsagedEmojis }, function() {
+        // do nothing
+        console.log("...saved");
+    });
+    // window.localStorage.setItem('lastUsagedEmojisSave', lastUsagedEmojis);
 
     console.log("service_worker lastUsagedEmojis:", lastUsagedEmojis);
 }
-
-import React from "react";
-import data from "@emoji-mart/data";
-import Picker from "@emoji-mart/react";
-
-React.createElement("Picker");
-
-// function buildEmojiPicker() {
-//     return (
-//         <div className="container">
-//           <Picker data={data} onEmojiSelect={console.log} />
-//         </div>
-//       );
-// }

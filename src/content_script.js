@@ -1,6 +1,69 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import MyEmojiPicker from "./MyEmojiPickerTranspiled.js";
+import 'core-js/stable'
+import 'regenerator-runtime/runtime'
+
+const lastUsageEmojisMaxSize = 45;
+
+// chrome.storage.local.clear();
+
+async function getLastUsagedEmojisCategory() {
+    let emojis = Array.from((await getLastUsagedEmojis()))
+            .map((v) => JSON.parse(v))
+            .reverse();
+    let lastUsagedEmojisCategory = {
+        title: "Last usaged",
+        emojis: emojis
+    };
+
+    console.log("3333");
+    console.log(lastUsagedEmojisCategory)
+    return lastUsagedEmojisCategory;
+}
+
+async function getLastUsagedEmojis() {
+    let lastUsagedEmojis;
+
+    let cache = await chrome.storage.local.get(["lastUsagedEmojisSave"]);
+    if (cache.lastUsagedEmojisSave) {
+        lastUsagedEmojis = new Set(JSON.parse(cache.lastUsagedEmojisSave));
+
+        console.log("000");
+        console.log(lastUsagedEmojis);
+    }
+
+    if (lastUsagedEmojis === undefined) {
+        lastUsagedEmojis = new Set();
+    }
+    if (lastUsagedEmojis instanceof Set) {
+        // do nothing
+    } else {
+        lastUsagedEmojis = new Set();
+    }
+
+    console.log("Last usaged emojis: " + JSON.stringify(lastUsagedEmojis));
+    console.log(lastUsagedEmojis);
+    return lastUsagedEmojis;
+}
+
+async function processEmojiUsage(emoji, code) {
+    let emojiItem = JSON.stringify({ emoji: emoji, code: code });
+
+    let lastUsagedEmojis = await getLastUsagedEmojis();
+
+    if (lastUsagedEmojis.has(emojiItem)) {
+        lastUsagedEmojis.delete(emojiItem);
+    }
+    lastUsagedEmojis.add(emojiItem);
+
+    if (lastUsagedEmojis.size > lastUsageEmojisMaxSize) {
+        const [firstElement] = lastUsagedEmojis;
+        lastUsagedEmojis.delete(firstElement);
+    }
+
+    await chrome.storage.local.set({ 'lastUsagedEmojisSave': JSON.stringify(Array.from(lastUsagedEmojis)) });
+}
 
 // Logic for existing edit blocks
 const editorBlockList = document.getElementsByClassName("js-vue-markdown-field");
@@ -25,67 +88,96 @@ let observer = new MutationObserver((mutations) => {
 });
 observer.observe(document, { childList: true, subtree: true });
 
+// Fetch style
+var link = document.createElement("link");
+link.href = chrome.runtime.getURL("MyEmojiPickerTranspiled.css");
+link.type = "text/css";
+link.rel = "stylesheet";
+document.getElementsByTagName("head")[0].appendChild(link);
+
 function prepareEditorBlock(editorBlock) {
     // Create emoji button
-
     const emojiButton = document.createElement("button");
     emojiButton.type = "button";
-    emojiButton.className = "btn gl-mr-3 btn-default btn-sm gl-button btn-default-tertiary btn-icon";
+    emojiButton.className = "btn gl-mr-2 gl-ml-2 btn-default btn-sm gl-button btn-default-tertiary btn-icon";
+    emojiButton.setAttribute("data-md-command", "");
+    emojiButton.setAttribute("data-md-block", "");
+    emojiButton.setAttribute("data-track-action", "execute_toolbar_control");
+    emojiButton.setAttribute("data-track-label", "markdown_editor");
+
+    const emojiDiv = document.createElement("div");
+    emojiDiv.appendChild(emojiButton);
 
     const svgButtonImg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svgButtonImg.setAttribute("data-testid", "smile-icon");
     svgButtonImg.classList.add("gl-button-icon");
     svgButtonImg.classList.add("gl-icon");
     svgButtonImg.classList.add("s16");
-    svgButtonImg.setAttribute("data-testid", "smile-icon");
-    svgButtonImg.setAttribute("role", "img");
-    svgButtonImg.setAttribute("aria-hiden", "true");
     const svgButtomImgImg = document.createElementNS('http://www.w3.org/2000/svg', 'use');
-    // svgButtomImgImg.setAttribute("href", "https://gitlab.services.mts.ru/assets/icons-85d93222827a1ed673b1e26461ae6f00a6fa0cece63b29a2dff3cb8f74f65829.svg#slight-smile");
-    svgButtomImgImg.setAttribute("href", "https://www.svgrepo.com/show/535115/alien.svg");
+    svgButtomImgImg.setAttribute("href", "https://gitlab.com/assets/icons-8791a66659d025e0a4c801978c79a1fbd82db1d27d85f044a35728ea7cf0ae80.svg#history");
+    // svgButtomImgImg.setAttribute("href", "https://www.svgrepo.com/show/535115/alien.svg");
     svgButtonImg.appendChild(svgButtomImgImg);
     emojiButton.appendChild(svgButtonImg);
 
+    // const buttonImg = document.createElement("img");
+    // buttonImg.setAttribute("src", chrome.runtime.getURL("images/smile_icon.png"));
+    // buttonImg.setAttribute('height', '16px');
+    // buttonImg.setAttribute('width', '16px');
+    // emojiButton.appendChild(buttonImg);
+
     const toolBarDiv = editorBlock.querySelector('[data-testid="md-header-toolbar"]');
-    toolBarDiv.appendChild(emojiButton);
+    const mainButtons = toolBarDiv.childNodes[0];
+
+    mainButtons.appendChild(emojiDiv);
 
     // Hide emoji button on preview click
     const previewButton = editorBlock.querySelector('[data-testid="preview-toggle"]');
     previewButton.addEventListener("click", () => {
         if (previewButton.value === "preview") {
-            emojiButton.classList.add("gl-display-none!");
+            emojiDiv.style.display = 'none';
         } else {
-            emojiButton.classList.remove("gl-display-none!");
+            emojiDiv.style.display = 'block';
         }
     });
 
-    // Logic for emoji button
-    emojiButton.addEventListener("click", () => {
-        //test
-        let message = { type: "RANDOM_EMOJI" };
-        chrome.runtime.sendMessage(message, (response) => {
-            console.log("random emoji:", response);
-            insertEmojiTag({
-                textArea: editorBlock.querySelector("textarea"),
-                tag: response.code,
-                cursorOffset: 0
-            });
+    async function pickEmoji(emoji, code) {
+        insertEmojiTag({
+            textArea: editorBlock.querySelector("textarea"),
+            tag: code,
+            cursorOffset: 0
         });
 
-        // insertEmojiTag({
-        //     textArea: editorBlock.querySelector("textarea"),
-        //     tag: ":shrug:",
-        //     cursorOffset: 0
-        // });
+        await processEmojiUsage(emoji, code);
+
+        picker.style.display = 'none';
+
+        console.log("Picked emoji: " + emoji);
+    }
+
+    // Emoji picker
+    const picker = document.createElement("div");
+    ReactDOM.render(React.createElement(MyEmojiPicker, { pickEmoji: pickEmoji, getLastUsagedEmojis: getLastUsagedEmojisCategory }), picker);
+    picker.style.display = 'none';
+    emojiDiv.appendChild(picker);
+
+    // Logic for emoji button
+    emojiButton.addEventListener("click", () => {
+
+        if (picker.style.display === 'none') {
+            picker.style.display = 'block';
+        } else {
+            picker.style.display = 'none';
+        }
     });
 
-    // Test emoji picker
-    const picker = document.createElement("div");
-    ReactDOM.render(React.createElement(MyEmojiPicker, null), picker);
-    toolBarDiv.appendChild(picker);
+    // Hide emoji picker
+    document.addEventListener('click', function (event) {
+        if (!emojiDiv.contains(event.target)) {
+            picker.style.display = 'none';
+        }
+    });
 }
 
-function insertEmojiTag({
+async function insertEmojiTag({
     textArea,
     tag,
     cursorOffset,
@@ -96,11 +188,6 @@ function insertEmojiTag({
     }
 
     insertText(textArea, tag + " ");
-
-    let message = { type: "EMOJI_USAGE", emoji: tag };
-    chrome.runtime.sendMessage(message, (response) => {
-        // console.log("content-script receive response:", response);
-    });
 
     return moveCursor({
         textArea,

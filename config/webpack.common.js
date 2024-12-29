@@ -63,6 +63,10 @@ const common = {
       filename: '[name].css',
     }),
   ],
+  // externals: {
+  //   react_native_svg: 'react-native-svg',
+  //   react: 'react'
+  // },
 };
 
 module.exports = common;
