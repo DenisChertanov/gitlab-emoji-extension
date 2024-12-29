@@ -8,6 +8,27 @@ const PATHS = require('./paths');
 // used in the module rules and in the stats exlude list
 const IMAGE_TYPES = /\.(png|jpe?g|gif|svg)$/i;
 
+const path = require('path');
+const appDirectory = path.resolve(__dirname, '../');
+const babelLoaderConfiguration = {
+  test: /\.js$/,
+  // Add every directory that needs to be compiled by Babel during the build.
+  include: [
+    appDirectory,
+    path.resolve(appDirectory, 'node_modules/@react-native/assets-registry/registry')
+  ],
+  use: {
+    loader: 'babel-loader',
+    options: {
+      cacheDirectory: true,
+      // The 'metro-react-native-babel-preset' preset is recommended to match React Native's packager
+      presets: ['module:metro-react-native-babel-preset'],
+      // Re-write paths to import only the modules needed by the app
+      plugins: ['react-native-web']
+    }
+  }
+};
+
 // To re-use webpack configuration across templates,
 // CLI maintains a common webpack configuration file - `webpack.common.js`.
 // Whenever user creates an extension, CLI adds `webpack.common.js` file
@@ -45,7 +66,9 @@ const common = {
             },
           },
         ],
+        // type: 'javascript/auto'
       },
+      // babelLoaderConfiguration,
     ],
   },
   plugins: [
@@ -63,10 +86,6 @@ const common = {
       filename: '[name].css',
     }),
   ],
-  // externals: {
-  //   react_native_svg: 'react-native-svg',
-  //   react: 'react'
-  // },
 };
 
 module.exports = common;

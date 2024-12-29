@@ -8,8 +8,6 @@ import { useState } from 'react'
 import React from "react";
 import ReactDOM from "react-dom";
 
-import { SvgUri } from 'react-native-svg';
-
 function MyEmojiPicker({ pickEmoji, getLastUsagedEmojis, ...props }) {
 
     const [activeEmojiGroupIndex, setActiveEmojiGroupIndex] = useState(0)
@@ -51,7 +49,9 @@ function MyEmojiPicker({ pickEmoji, getLastUsagedEmojis, ...props }) {
         <div className="dch-dropdown">
             <div className="dch-dropdown-inner">
                 <div className="dch-search-box">
-                    <img src={chrome.runtime.getURL("/images/search_icon.png")} className="dch-search-box-icon" />
+                    <svg className="dch-search-box-icon">
+                        <use href='https://gitlab.com/assets/icons-8791a66659d025e0a4c801978c79a1fbd82db1d27d85f044a35728ea7cf0ae80.svg#search' fill='#737278' />
+                    </svg>
                     <input
                         type="search"
                         placeholder="Search"
@@ -72,11 +72,9 @@ function MyEmojiPicker({ pickEmoji, getLastUsagedEmojis, ...props }) {
                                     fetchLastUsagedEmojis();
                                 }}
                             >
-                                {/* <img src={chrome.runtime.getURL("/images/clock_icon.png")} className="dch16" /> */}
-                                {/* <svg className="gl-button-icon gl-icon dch16 gl-fill-current">
-                                    <use href="https://gitlab.com/assets/icons-8791a66659d025e0a4c801978c79a1fbd82db1d27d85f044a35728ea7cf0ae80.svg#history" />
-                                </svg> */}
-                                <SvgUri className="dch16" uri="https://gitlab.com/assets/icons-8791a66659d025e0a4c801978c79a1fbd82db1d27d85f044a35728ea7cf0ae80.svg#history"/>
+                                <svg className="gl-button-icon gl-icon dch16 gl-fill-current">
+                                    <use href='https://gitlab.com/assets/icons-8791a66659d025e0a4c801978c79a1fbd82db1d27d85f044a35728ea7cf0ae80.svg#history' fill='#28272d'/>
+                                </svg>
                             </button>
                             <button
                                 aria-label="Smileys &amp; Emotion"
@@ -87,7 +85,9 @@ function MyEmojiPicker({ pickEmoji, getLastUsagedEmojis, ...props }) {
                                     setActiveEmojiGroupIndex(0);
                                 }}
                             >
-                                <img src={chrome.runtime.getURL("/images/smile_icon.png")} className="dch16" />
+                                <svg className="gl-button-icon gl-icon s16 gl-fill-current">
+                                    <use href='https://gitlab.com/assets/icons-8791a66659d025e0a4c801978c79a1fbd82db1d27d85f044a35728ea7cf0ae80.svg#smiley' fill='#28272d'/>
+                                </svg>
                             </button>
                             <button
                                 aria-label="People &amp; Body"
@@ -98,7 +98,9 @@ function MyEmojiPicker({ pickEmoji, getLastUsagedEmojis, ...props }) {
                                     setActiveEmojiGroupIndex(1);
                                 }}
                             >
-                                <img src={chrome.runtime.getURL("/images/group_icon.png")} className="dch16" />
+                                <svg className="gl-button-icon gl-icon s16 gl-fill-current">
+                                    <use href='https://gitlab.com/assets/icons-8791a66659d025e0a4c801978c79a1fbd82db1d27d85f044a35728ea7cf0ae80.svg#users' fill='#28272d'/>
+                                </svg>
                             </button>
                             <button
                                 aria-label="Animals &amp; Nature"
@@ -109,7 +111,9 @@ function MyEmojiPicker({ pickEmoji, getLastUsagedEmojis, ...props }) {
                                     setActiveEmojiGroupIndex(2);
                                 }}
                             >
-                                <img src={chrome.runtime.getURL("/images/leaf_icon.png")} className="dch16" />
+                                <svg className="gl-button-icon gl-icon s16 gl-fill-current">
+                                    <use href='https://gitlab.com/assets/icons-8791a66659d025e0a4c801978c79a1fbd82db1d27d85f044a35728ea7cf0ae80.svg#nature' fill='#28272d'/>
+                                </svg>
                             </button>
                             <button
                                 aria-label="Food &amp; Drink"
@@ -120,7 +124,9 @@ function MyEmojiPicker({ pickEmoji, getLastUsagedEmojis, ...props }) {
                                     setActiveEmojiGroupIndex(3);
                                 }}
                             >
-                                <img src={chrome.runtime.getURL("/images/restaurant_icon.png")} className="dch16" />
+                                <svg className="gl-button-icon gl-icon s16 gl-fill-current">
+                                    <use href='https://gitlab.com/assets/icons-8791a66659d025e0a4c801978c79a1fbd82db1d27d85f044a35728ea7cf0ae80.svg#food' fill='#28272d'/>
+                                </svg>
                             </button>
                             <button
                                 aria-label="Travel &amp; Places"
@@ -131,7 +137,9 @@ function MyEmojiPicker({ pickEmoji, getLastUsagedEmojis, ...props }) {
                                     setActiveEmojiGroupIndex(4);
                                 }}
                             >
-                                <img src={chrome.runtime.getURL("/images/airplane_icon.png")} className="dch16" />
+                                <svg className="gl-button-icon gl-icon s16 gl-fill-current">
+                                    <use href='https://gitlab.com/assets/icons-8791a66659d025e0a4c801978c79a1fbd82db1d27d85f044a35728ea7cf0ae80.svg#car' fill='#28272d'/>
+                                </svg>
                             </button>
                             <button
                                 aria-label="Activities"
@@ -142,7 +150,9 @@ function MyEmojiPicker({ pickEmoji, getLastUsagedEmojis, ...props }) {
                                     setActiveEmojiGroupIndex(5);
                                 }}
                             >
-                                <img src={chrome.runtime.getURL("/images/football_icon.png")} className="dch16" />
+                                <svg className="gl-button-icon gl-icon s16 gl-fill-current">
+                                    <use href='https://gitlab.com/assets/icons-8791a66659d025e0a4c801978c79a1fbd82db1d27d85f044a35728ea7cf0ae80.svg#dumbbell' fill='#28272d'/>
+                                </svg>
                             </button>
                             <button
                                 aria-label="Objects"
@@ -153,7 +163,9 @@ function MyEmojiPicker({ pickEmoji, getLastUsagedEmojis, ...props }) {
                                     setActiveEmojiGroupIndex(6);
                                 }}
                             >
-                                <img src={chrome.runtime.getURL("/images/container_icon.png")} className="dch16" />
+                                <svg className="gl-button-icon gl-icon s16 gl-fill-current">
+                                    <use href='https://gitlab.com/assets/icons-8791a66659d025e0a4c801978c79a1fbd82db1d27d85f044a35728ea7cf0ae80.svg#object' fill='#28272d'/>
+                                </svg>
                             </button>
                             <button
                                 aria-label="Symbols"
@@ -164,7 +176,9 @@ function MyEmojiPicker({ pickEmoji, getLastUsagedEmojis, ...props }) {
                                     setActiveEmojiGroupIndex(7);
                                 }}
                             >
-                                <img src={chrome.runtime.getURL("/images/check_mark_icon.png")} className="dch16" />
+                                <svg className="gl-button-icon gl-icon s16 gl-fill-current">
+                                    <use href='https://gitlab.com/assets/icons-8791a66659d025e0a4c801978c79a1fbd82db1d27d85f044a35728ea7cf0ae80.svg#trigger-source' fill='#28272d'/>
+                                </svg>
                             </button>
                             <button
                                 aria-label="Flags"
@@ -175,7 +189,9 @@ function MyEmojiPicker({ pickEmoji, getLastUsagedEmojis, ...props }) {
                                     setActiveEmojiGroupIndex(8);
                                 }}
                             >
-                                <img src={chrome.runtime.getURL("/images/red_flag_icon.png")} className="dch16" />
+                                <svg className="gl-button-icon gl-icon s16 gl-fill-current">
+                                    <use href='https://gitlab.com/assets/icons-8791a66659d025e0a4c801978c79a1fbd82db1d27d85f044a35728ea7cf0ae80.svg#flag' fill='#28272d'/>
+                                </svg>
                             </button>
                         </div>
                     </div>

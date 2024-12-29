@@ -28,8 +28,6 @@ var _reactDom = require("react-dom");
 
 var _reactDom2 = _interopRequireDefault(_reactDom);
 
-var _reactNativeSvg = require('react-native-svg');
-
 function MyEmojiPicker(_ref) {
     var pickEmoji = _ref.pickEmoji;
     var getLastUsagedEmojis = _ref.getLastUsagedEmojis;
@@ -106,7 +104,11 @@ function MyEmojiPicker(_ref) {
             _react2['default'].createElement(
                 'div',
                 { className: 'dch-search-box' },
-                _react2['default'].createElement('img', { src: chrome.runtime.getURL("/images/search_icon.png"), className: 'dch-search-box-icon' }),
+                _react2['default'].createElement(
+                    'svg',
+                    { className: 'dch-search-box-icon' },
+                    _react2['default'].createElement('use', { href: 'https://gitlab.com/assets/icons-8791a66659d025e0a4c801978c79a1fbd82db1d27d85f044a35728ea7cf0ae80.svg#search', fill: '#737278' })
+                ),
                 _react2['default'].createElement('input', {
                     type: 'search',
                     placeholder: 'Search',
@@ -135,7 +137,11 @@ function MyEmojiPicker(_ref) {
                                     fetchLastUsagedEmojis();
                                 }
                             },
-                            _react2['default'].createElement(_reactNativeSvg.SvgUri, { className: 'dch16', uri: 'https://gitlab.com/assets/icons-8791a66659d025e0a4c801978c79a1fbd82db1d27d85f044a35728ea7cf0ae80.svg#history' })
+                            _react2['default'].createElement(
+                                'svg',
+                                { className: 'gl-button-icon gl-icon dch16 gl-fill-current' },
+                                _react2['default'].createElement('use', { href: 'https://gitlab.com/assets/icons-8791a66659d025e0a4c801978c79a1fbd82db1d27d85f044a35728ea7cf0ae80.svg#history', fill: '#28272d' })
+                            )
                         ),
                         _react2['default'].createElement(
                             'button',
@@ -148,7 +154,11 @@ function MyEmojiPicker(_ref) {
                                     setActiveEmojiGroupIndex(0);
                                 }
                             },
-                            _react2['default'].createElement('img', { src: chrome.runtime.getURL("/images/smile_icon.png"), className: 'dch16' })
+                            _react2['default'].createElement(
+                                'svg',
+                                { className: 'gl-button-icon gl-icon s16 gl-fill-current' },
+                                _react2['default'].createElement('use', { href: 'https://gitlab.com/assets/icons-8791a66659d025e0a4c801978c79a1fbd82db1d27d85f044a35728ea7cf0ae80.svg#smiley', fill: '#28272d' })
+                            )
                         ),
                         _react2['default'].createElement(
                             'button',
@@ -161,7 +171,11 @@ function MyEmojiPicker(_ref) {
                                     setActiveEmojiGroupIndex(1);
                                 }
                             },
-                            _react2['default'].createElement('img', { src: chrome.runtime.getURL("/images/group_icon.png"), className: 'dch16' })
+                            _react2['default'].createElement(
+                                'svg',
+                                { className: 'gl-button-icon gl-icon s16 gl-fill-current' },
+                                _react2['default'].createElement('use', { href: 'https://gitlab.com/assets/icons-8791a66659d025e0a4c801978c79a1fbd82db1d27d85f044a35728ea7cf0ae80.svg#users', fill: '#28272d' })
+                            )
                         ),
                         _react2['default'].createElement(
                             'button',
@@ -174,7 +188,11 @@ function MyEmojiPicker(_ref) {
                                     setActiveEmojiGroupIndex(2);
                                 }
                             },
-                            _react2['default'].createElement('img', { src: chrome.runtime.getURL("/images/leaf_icon.png"), className: 'dch16' })
+                            _react2['default'].createElement(
+                                'svg',
+                                { className: 'gl-button-icon gl-icon s16 gl-fill-current' },
+                                _react2['default'].createElement('use', { href: 'https://gitlab.com/assets/icons-8791a66659d025e0a4c801978c79a1fbd82db1d27d85f044a35728ea7cf0ae80.svg#nature', fill: '#28272d' })
+                            )
                         ),
                         _react2['default'].createElement(
                             'button',
@@ -187,7 +205,11 @@ function MyEmojiPicker(_ref) {
                                     setActiveEmojiGroupIndex(3);
                                 }
                             },
-                            _react2['default'].createElement('img', { src: chrome.runtime.getURL("/images/restaurant_icon.png"), className: 'dch16' })
+                            _react2['default'].createElement(
+                                'svg',
+                                { className: 'gl-button-icon gl-icon s16 gl-fill-current' },
+                                _react2['default'].createElement('use', { href: 'https://gitlab.com/assets/icons-8791a66659d025e0a4c801978c79a1fbd82db1d27d85f044a35728ea7cf0ae80.svg#food', fill: '#28272d' })
+                            )
                         ),
                         _react2['default'].createElement(
                             'button',
@@ -200,7 +222,11 @@ function MyEmojiPicker(_ref) {
                                     setActiveEmojiGroupIndex(4);
                                 }
                             },
-                            _react2['default'].createElement('img', { src: chrome.runtime.getURL("/images/airplane_icon.png"), className: 'dch16' })
+                            _react2['default'].createElement(
+                                'svg',
+                                { className: 'gl-button-icon gl-icon s16 gl-fill-current' },
+                                _react2['default'].createElement('use', { href: 'https://gitlab.com/assets/icons-8791a66659d025e0a4c801978c79a1fbd82db1d27d85f044a35728ea7cf0ae80.svg#car', fill: '#28272d' })
+                            )
                         ),
                         _react2['default'].createElement(
                             'button',
@@ -213,7 +239,11 @@ function MyEmojiPicker(_ref) {
                                     setActiveEmojiGroupIndex(5);
                                 }
                             },
-                            _react2['default'].createElement('img', { src: chrome.runtime.getURL("/images/football_icon.png"), className: 'dch16' })
+                            _react2['default'].createElement(
+                                'svg',
+                                { className: 'gl-button-icon gl-icon s16 gl-fill-current' },
+                                _react2['default'].createElement('use', { href: 'https://gitlab.com/assets/icons-8791a66659d025e0a4c801978c79a1fbd82db1d27d85f044a35728ea7cf0ae80.svg#dumbbell', fill: '#28272d' })
+                            )
                         ),
                         _react2['default'].createElement(
                             'button',
@@ -226,7 +256,11 @@ function MyEmojiPicker(_ref) {
                                     setActiveEmojiGroupIndex(6);
                                 }
                             },
-                            _react2['default'].createElement('img', { src: chrome.runtime.getURL("/images/container_icon.png"), className: 'dch16' })
+                            _react2['default'].createElement(
+                                'svg',
+                                { className: 'gl-button-icon gl-icon s16 gl-fill-current' },
+                                _react2['default'].createElement('use', { href: 'https://gitlab.com/assets/icons-8791a66659d025e0a4c801978c79a1fbd82db1d27d85f044a35728ea7cf0ae80.svg#object', fill: '#28272d' })
+                            )
                         ),
                         _react2['default'].createElement(
                             'button',
@@ -239,7 +273,11 @@ function MyEmojiPicker(_ref) {
                                     setActiveEmojiGroupIndex(7);
                                 }
                             },
-                            _react2['default'].createElement('img', { src: chrome.runtime.getURL("/images/check_mark_icon.png"), className: 'dch16' })
+                            _react2['default'].createElement(
+                                'svg',
+                                { className: 'gl-button-icon gl-icon s16 gl-fill-current' },
+                                _react2['default'].createElement('use', { href: 'https://gitlab.com/assets/icons-8791a66659d025e0a4c801978c79a1fbd82db1d27d85f044a35728ea7cf0ae80.svg#trigger-source', fill: '#28272d' })
+                            )
                         ),
                         _react2['default'].createElement(
                             'button',
@@ -252,7 +290,11 @@ function MyEmojiPicker(_ref) {
                                     setActiveEmojiGroupIndex(8);
                                 }
                             },
-                            _react2['default'].createElement('img', { src: chrome.runtime.getURL("/images/red_flag_icon.png"), className: 'dch16' })
+                            _react2['default'].createElement(
+                                'svg',
+                                { className: 'gl-button-icon gl-icon s16 gl-fill-current' },
+                                _react2['default'].createElement('use', { href: 'https://gitlab.com/assets/icons-8791a66659d025e0a4c801978c79a1fbd82db1d27d85f044a35728ea7cf0ae80.svg#flag', fill: '#28272d' })
+                            )
                         )
                     )
                 ),
@@ -268,6 +310,3 @@ function MyEmojiPicker(_ref) {
 
 exports['default'] = MyEmojiPicker;
 module.exports = exports['default'];
-/* <img src={chrome.runtime.getURL("/images/clock_icon.png")} className="dch16" /> */ /* <svg className="gl-button-icon gl-icon dch16 gl-fill-current">
-                                                                                         <use href="https://gitlab.com/assets/icons-8791a66659d025e0a4c801978c79a1fbd82db1d27d85f044a35728ea7cf0ae80.svg#history" />
-                                                                                      </svg> */

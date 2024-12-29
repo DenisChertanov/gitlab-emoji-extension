@@ -113,16 +113,9 @@ function prepareEditorBlock(editorBlock) {
     svgButtonImg.classList.add("gl-icon");
     svgButtonImg.classList.add("s16");
     const svgButtomImgImg = document.createElementNS('http://www.w3.org/2000/svg', 'use');
-    svgButtomImgImg.setAttribute("href", "https://gitlab.com/assets/icons-8791a66659d025e0a4c801978c79a1fbd82db1d27d85f044a35728ea7cf0ae80.svg#history");
-    // svgButtomImgImg.setAttribute("href", "https://www.svgrepo.com/show/535115/alien.svg");
+    svgButtomImgImg.setAttribute("href", "https://gitlab.com/assets/icons-8791a66659d025e0a4c801978c79a1fbd82db1d27d85f044a35728ea7cf0ae80.svg#slight-smile");
     svgButtonImg.appendChild(svgButtomImgImg);
     emojiButton.appendChild(svgButtonImg);
-
-    // const buttonImg = document.createElement("img");
-    // buttonImg.setAttribute("src", chrome.runtime.getURL("images/smile_icon.png"));
-    // buttonImg.setAttribute('height', '16px');
-    // buttonImg.setAttribute('width', '16px');
-    // emojiButton.appendChild(buttonImg);
 
     const toolBarDiv = editorBlock.querySelector('[data-testid="md-header-toolbar"]');
     const mainButtons = toolBarDiv.childNodes[0];
