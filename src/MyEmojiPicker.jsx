@@ -3,21 +3,49 @@ import './MyEmojiPicker.css'
 import emojiGroups from './emojis.json'
 
 import MyEmojiPage from './MyEmojiPageTranspiled.js'
+import MyCrossButton from './MyCrossButtonTranspiled.js'
 import { useState } from 'react'
 
 import React from "react";
 import ReactDOM from "react-dom";
 
-function MyEmojiPicker({ pickEmoji, getLastUsagedEmojis, ...props }) {
+function MyEmojiPicker({ pickEmoji, getLastUsagedEmojis, initActiveGroup, initActiveGroupIndex, ...props }) {
 
-    const [activeEmojiGroupIndex, setActiveEmojiGroupIndex] = useState(0)
-    const [activeEmojiGroup, setActiveEmojiGroup] = useState(emojiGroups[0])
+    const [activeEmojiGroupIndex, setActiveEmojiGroupIndex] = useState(initActiveGroupIndex)
+    const [activeEmojiGroup, setActiveEmojiGroup] = useState(initActiveGroup)
 
-    function onSearchInputChage(value) {
-        if (value === "") {
-            setActiveEmojiGroup(getLastUsagedEmojis());
+    const [searchValue, setSearchValue] = useState("")
+
+    const [lastUsedEmojis, setLastUsedEmojis] = useState(getLastUsagedEmojis())
+
+    async function fetchLastUsedEmojis() {
+        let lastUsedEmojis = await getLastUsagedEmojis();
+        setLastUsedEmojis(lastUsedEmojis);
+
+        return lastUsedEmojis;
+    }
+
+    async function clearState() {
+        let lastUsedEmojis = await fetchLastUsedEmojis();
+        if (lastUsedEmojis && lastUsedEmojis.emojis.length != 0) {
+            setActiveEmojiGroup(lastUsedEmojis);
             setActiveEmojiGroupIndex(-1);
+        } else {
+            setActiveEmojiGroup(emojiGroups[0]);
+            setActiveEmojiGroupIndex(0);
+        }
 
+        setSearchValue("");
+
+        // console.log("State after clear:");
+        // console.log(lastUsedEmojis);
+    }
+
+    async function onSearchInputChage(value) {
+        setSearchValue(value);
+
+        if (value === "") {
+            clearState()
             return;
         }
 
@@ -29,20 +57,15 @@ function MyEmojiPicker({ pickEmoji, getLastUsagedEmojis, ...props }) {
                 }
             }
         }
-        let searchEmojiGroup = { title: "Searched", emojis: emojis };
-        console.log(emojis);
+        let searchEmojiGroup = { title: "Search", emojis: emojis };
 
         setActiveEmojiGroup(searchEmojiGroup);
         setActiveEmojiGroupIndex(-2);
     }
 
-    async function fetchLastUsagedEmojis() {
-        let lastUsagedEmojis = await getLastUsagedEmojis();
-        console.log("7878");
-        console.log(lastUsagedEmojis);
-
-        setActiveEmojiGroup(lastUsagedEmojis);
-        setActiveEmojiGroupIndex(-1);
+    async function emojiButtonClick(emoji, code) {
+        await pickEmoji(emoji, code);
+        await clearState();
     }
 
     return (
@@ -57,10 +80,12 @@ function MyEmojiPicker({ pickEmoji, getLastUsagedEmojis, ...props }) {
                         placeholder="Search"
                         className="dch-search-box-input"
                         aria-label="Search for an emoji"
+                        value={searchValue}
                         onChange={(e) => {
                             onSearchInputChage(e.target.value);
                         }}
                     />
+                    {searchValue !== "" && <MyCrossButton clearState={clearState}/>}
                 </div>
                 <div className='dch-dropdown-emojis-block'>
                     <div className="dch-dropdown-contents">
@@ -69,11 +94,12 @@ function MyEmojiPicker({ pickEmoji, getLastUsagedEmojis, ...props }) {
                                 type="button"
                                 className={`dch-dropdown-contents-category dch-default-button dch-btn-default-tertiary ${activeEmojiGroupIndex === -1 ? 'dch-emoji-category-active' : ''}`}
                                 onClick={() => {
-                                    fetchLastUsagedEmojis();
+                                    setActiveEmojiGroup(lastUsedEmojis);
+                                    setActiveEmojiGroupIndex(-1);
                                 }}
                             >
                                 <svg className="gl-button-icon gl-icon dch16 gl-fill-current">
-                                    <use href='https://gitlab.com/assets/icons-8791a66659d025e0a4c801978c79a1fbd82db1d27d85f044a35728ea7cf0ae80.svg#history' fill='#28272d'/>
+                                    <use href='https://gitlab.com/assets/icons-8791a66659d025e0a4c801978c79a1fbd82db1d27d85f044a35728ea7cf0ae80.svg#history' fill='#28272d' />
                                 </svg>
                             </button>
                             <button
@@ -86,7 +112,7 @@ function MyEmojiPicker({ pickEmoji, getLastUsagedEmojis, ...props }) {
                                 }}
                             >
                                 <svg className="gl-button-icon gl-icon s16 gl-fill-current">
-                                    <use href='https://gitlab.com/assets/icons-8791a66659d025e0a4c801978c79a1fbd82db1d27d85f044a35728ea7cf0ae80.svg#smiley' fill='#28272d'/>
+                                    <use href='https://gitlab.com/assets/icons-8791a66659d025e0a4c801978c79a1fbd82db1d27d85f044a35728ea7cf0ae80.svg#smiley' fill='#28272d' />
                                 </svg>
                             </button>
                             <button
@@ -99,7 +125,7 @@ function MyEmojiPicker({ pickEmoji, getLastUsagedEmojis, ...props }) {
                                 }}
                             >
                                 <svg className="gl-button-icon gl-icon s16 gl-fill-current">
-                                    <use href='https://gitlab.com/assets/icons-8791a66659d025e0a4c801978c79a1fbd82db1d27d85f044a35728ea7cf0ae80.svg#users' fill='#28272d'/>
+                                    <use href='https://gitlab.com/assets/icons-8791a66659d025e0a4c801978c79a1fbd82db1d27d85f044a35728ea7cf0ae80.svg#users' fill='#28272d' />
                                 </svg>
                             </button>
                             <button
@@ -112,7 +138,7 @@ function MyEmojiPicker({ pickEmoji, getLastUsagedEmojis, ...props }) {
                                 }}
                             >
                                 <svg className="gl-button-icon gl-icon s16 gl-fill-current">
-                                    <use href='https://gitlab.com/assets/icons-8791a66659d025e0a4c801978c79a1fbd82db1d27d85f044a35728ea7cf0ae80.svg#nature' fill='#28272d'/>
+                                    <use href='https://gitlab.com/assets/icons-8791a66659d025e0a4c801978c79a1fbd82db1d27d85f044a35728ea7cf0ae80.svg#nature' fill='#28272d' />
                                 </svg>
                             </button>
                             <button
@@ -125,7 +151,7 @@ function MyEmojiPicker({ pickEmoji, getLastUsagedEmojis, ...props }) {
                                 }}
                             >
                                 <svg className="gl-button-icon gl-icon s16 gl-fill-current">
-                                    <use href='https://gitlab.com/assets/icons-8791a66659d025e0a4c801978c79a1fbd82db1d27d85f044a35728ea7cf0ae80.svg#food' fill='#28272d'/>
+                                    <use href='https://gitlab.com/assets/icons-8791a66659d025e0a4c801978c79a1fbd82db1d27d85f044a35728ea7cf0ae80.svg#food' fill='#28272d' />
                                 </svg>
                             </button>
                             <button
@@ -138,7 +164,7 @@ function MyEmojiPicker({ pickEmoji, getLastUsagedEmojis, ...props }) {
                                 }}
                             >
                                 <svg className="gl-button-icon gl-icon s16 gl-fill-current">
-                                    <use href='https://gitlab.com/assets/icons-8791a66659d025e0a4c801978c79a1fbd82db1d27d85f044a35728ea7cf0ae80.svg#car' fill='#28272d'/>
+                                    <use href='https://gitlab.com/assets/icons-8791a66659d025e0a4c801978c79a1fbd82db1d27d85f044a35728ea7cf0ae80.svg#car' fill='#28272d' />
                                 </svg>
                             </button>
                             <button
@@ -151,7 +177,7 @@ function MyEmojiPicker({ pickEmoji, getLastUsagedEmojis, ...props }) {
                                 }}
                             >
                                 <svg className="gl-button-icon gl-icon s16 gl-fill-current">
-                                    <use href='https://gitlab.com/assets/icons-8791a66659d025e0a4c801978c79a1fbd82db1d27d85f044a35728ea7cf0ae80.svg#dumbbell' fill='#28272d'/>
+                                    <use href='https://gitlab.com/assets/icons-8791a66659d025e0a4c801978c79a1fbd82db1d27d85f044a35728ea7cf0ae80.svg#dumbbell' fill='#28272d' />
                                 </svg>
                             </button>
                             <button
@@ -164,7 +190,7 @@ function MyEmojiPicker({ pickEmoji, getLastUsagedEmojis, ...props }) {
                                 }}
                             >
                                 <svg className="gl-button-icon gl-icon s16 gl-fill-current">
-                                    <use href='https://gitlab.com/assets/icons-8791a66659d025e0a4c801978c79a1fbd82db1d27d85f044a35728ea7cf0ae80.svg#object' fill='#28272d'/>
+                                    <use href='https://gitlab.com/assets/icons-8791a66659d025e0a4c801978c79a1fbd82db1d27d85f044a35728ea7cf0ae80.svg#object' fill='#28272d' />
                                 </svg>
                             </button>
                             <button
@@ -177,7 +203,7 @@ function MyEmojiPicker({ pickEmoji, getLastUsagedEmojis, ...props }) {
                                 }}
                             >
                                 <svg className="gl-button-icon gl-icon s16 gl-fill-current">
-                                    <use href='https://gitlab.com/assets/icons-8791a66659d025e0a4c801978c79a1fbd82db1d27d85f044a35728ea7cf0ae80.svg#trigger-source' fill='#28272d'/>
+                                    <use href='https://gitlab.com/assets/icons-8791a66659d025e0a4c801978c79a1fbd82db1d27d85f044a35728ea7cf0ae80.svg#trigger-source' fill='#28272d' />
                                 </svg>
                             </button>
                             <button
@@ -190,13 +216,13 @@ function MyEmojiPicker({ pickEmoji, getLastUsagedEmojis, ...props }) {
                                 }}
                             >
                                 <svg className="gl-button-icon gl-icon s16 gl-fill-current">
-                                    <use href='https://gitlab.com/assets/icons-8791a66659d025e0a4c801978c79a1fbd82db1d27d85f044a35728ea7cf0ae80.svg#flag' fill='#28272d'/>
+                                    <use href='https://gitlab.com/assets/icons-8791a66659d025e0a4c801978c79a1fbd82db1d27d85f044a35728ea7cf0ae80.svg#flag' fill='#28272d' />
                                 </svg>
                             </button>
                         </div>
                     </div>
                     <div>
-                        <MyEmojiPage title={activeEmojiGroup.title} emojis={activeEmojiGroup.emojis} pickEmoji={pickEmoji} />
+                        <MyEmojiPage title={activeEmojiGroup.title} emojis={activeEmojiGroup.emojis} pickEmoji={emojiButtonClick} />
                     </div>
                 </div>
             </div>

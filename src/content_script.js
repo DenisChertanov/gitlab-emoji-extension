@@ -13,12 +13,13 @@ async function getLastUsagedEmojisCategory() {
             .map((v) => JSON.parse(v))
             .reverse();
     let lastUsagedEmojisCategory = {
-        title: "Last usaged",
+        title: "Frequently used",
         emojis: emojis
     };
 
-    console.log("3333");
-    console.log(lastUsagedEmojisCategory)
+    // console.log("ROOT lastUsagedEmojisCategory:");
+    // console.log(lastUsagedEmojisCategory);
+
     return lastUsagedEmojisCategory;
 }
 
@@ -28,9 +29,6 @@ async function getLastUsagedEmojis() {
     let cache = await chrome.storage.local.get(["lastUsagedEmojisSave"]);
     if (cache.lastUsagedEmojisSave) {
         lastUsagedEmojis = new Set(JSON.parse(cache.lastUsagedEmojisSave));
-
-        console.log("000");
-        console.log(lastUsagedEmojis);
     }
 
     if (lastUsagedEmojis === undefined) {
@@ -42,8 +40,6 @@ async function getLastUsagedEmojis() {
         lastUsagedEmojis = new Set();
     }
 
-    console.log("Last usaged emojis: " + JSON.stringify(lastUsagedEmojis));
-    console.log(lastUsagedEmojis);
     return lastUsagedEmojis;
 }
 
@@ -61,6 +57,9 @@ async function processEmojiUsage(emoji, code) {
         const [firstElement] = lastUsagedEmojis;
         lastUsagedEmojis.delete(firstElement);
     }
+
+    // console.log("Used emojis after pick:");
+    // console.log(lastUsagedEmojis);
 
     await chrome.storage.local.set({ 'lastUsagedEmojisSave': JSON.stringify(Array.from(lastUsagedEmojis)) });
 }
@@ -95,7 +94,7 @@ link.type = "text/css";
 link.rel = "stylesheet";
 document.getElementsByTagName("head")[0].appendChild(link);
 
-function prepareEditorBlock(editorBlock) {
+async function prepareEditorBlock(editorBlock) {
     // Create emoji button
     const emojiButton = document.createElement("button");
     emojiButton.type = "button";
@@ -134,7 +133,7 @@ function prepareEditorBlock(editorBlock) {
 
     async function pickEmoji(emoji, code) {
         insertEmojiTag({
-            textArea: editorBlock.querySelector("textarea"),
+            textArea: editorBlock.querySelector('[data-testid="comment-field"]'),
             tag: code,
             cursorOffset: 0
         });
@@ -142,13 +141,22 @@ function prepareEditorBlock(editorBlock) {
         await processEmojiUsage(emoji, code);
 
         picker.style.display = 'none';
-
-        console.log("Picked emoji: " + emoji);
     }
 
     // Emoji picker
     const picker = document.createElement("div");
-    ReactDOM.render(React.createElement(MyEmojiPicker, { pickEmoji: pickEmoji, getLastUsagedEmojis: getLastUsagedEmojisCategory }), picker);
+    ReactDOM.render(
+        React.createElement(
+            MyEmojiPicker, 
+            { 
+                pickEmoji: pickEmoji, 
+                getLastUsagedEmojis: getLastUsagedEmojisCategory, 
+                initActiveGroup: await getLastUsagedEmojisCategory(), 
+                initActiveGroupIndex: -1 
+            }
+        ), 
+        picker
+    );
     picker.style.display = 'none';
     emojiDiv.appendChild(picker);
 
@@ -175,6 +183,9 @@ async function insertEmojiTag({
     tag,
     cursorOffset,
 }) {
+    // console.log("insertEmojiTag:");
+    // console.log(textArea);
+
     if (!tag.startsWith(':') || !tag.endsWith(':')) {
         console.log('Not emoji tag');
         return;
@@ -190,19 +201,17 @@ async function insertEmojiTag({
     });
 }
 
-function execInsertText(text) {
-    if (text === '') return document.execCommand('delete');
-
-    return document.execCommand('insertText', false, text);
-}
-
 const insertText = (target, text) => {
     const { selectionStart, selectionEnd, value } = target;
     const textBefore = value.substring(0, selectionStart);
     const textAfter = value.substring(selectionEnd, value.length);
     const insertedText = text instanceof Function ? text(textBefore, textAfter) : text;
 
-    if (!execInsertText(insertedText)) {
+    console.log("insertText:");
+    console.log(value);
+    console.log(target);
+
+    // if (!execInsertText(insertedText)) {
         const newText = textBefore + insertedText + textAfter;
 
         // eslint-disable-next-line no-param-reassign
@@ -213,7 +222,11 @@ const insertText = (target, text) => {
 
         // eslint-disable-next-line no-param-reassign
         target.selectionEnd = selectionStart + insertedText.length;
-    }
+
+        console.log("insertText inner:");
+        console.log(newText);
+        console.log(target);
+    // }
 
     // Trigger autosave
     target.dispatchEvent(new Event('input'));
@@ -224,6 +237,16 @@ const insertText = (target, text) => {
     target.dispatchEvent(event);
 };
 
+function execInsertText(text) {
+    if (text !== '') {
+        console.log("exec inertText");
+        console.log(text);
+        return document.execCommand('insertText', false, text);
+    }
+
+    // Nothing to do :)
+    return true;
+}
 
 function moveCursor({
     textArea,

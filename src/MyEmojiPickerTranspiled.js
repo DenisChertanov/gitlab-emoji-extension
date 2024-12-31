@@ -20,6 +20,10 @@ var _MyEmojiPageTranspiledJs = require('./MyEmojiPageTranspiled.js');
 
 var _MyEmojiPageTranspiledJs2 = _interopRequireDefault(_MyEmojiPageTranspiledJs);
 
+var _MyCrossButtonTranspiledJs = require('./MyCrossButtonTranspiled.js');
+
+var _MyCrossButtonTranspiledJs2 = _interopRequireDefault(_MyCrossButtonTranspiledJs);
+
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
@@ -31,64 +35,141 @@ var _reactDom2 = _interopRequireDefault(_reactDom);
 function MyEmojiPicker(_ref) {
     var pickEmoji = _ref.pickEmoji;
     var getLastUsagedEmojis = _ref.getLastUsagedEmojis;
+    var initActiveGroup = _ref.initActiveGroup;
+    var initActiveGroupIndex = _ref.initActiveGroupIndex;
 
-    var props = _objectWithoutProperties(_ref, ['pickEmoji', 'getLastUsagedEmojis']);
+    var props = _objectWithoutProperties(_ref, ['pickEmoji', 'getLastUsagedEmojis', 'initActiveGroup', 'initActiveGroupIndex']);
 
-    var _useState = (0, _react.useState)(0);
+    var _useState = (0, _react.useState)(initActiveGroupIndex);
 
     var _useState2 = _slicedToArray(_useState, 2);
 
     var activeEmojiGroupIndex = _useState2[0];
     var setActiveEmojiGroupIndex = _useState2[1];
 
-    var _useState3 = (0, _react.useState)(_emojisJson2['default'][0]);
+    var _useState3 = (0, _react.useState)(initActiveGroup);
 
     var _useState32 = _slicedToArray(_useState3, 2);
 
     var activeEmojiGroup = _useState32[0];
     var setActiveEmojiGroup = _useState32[1];
 
-    function onSearchInputChage(value) {
-        if (value === "") {
-            setActiveEmojiGroup(getLastUsagedEmojis());
-            setActiveEmojiGroupIndex(-1);
+    var _useState4 = (0, _react.useState)("");
 
-            return;
-        }
+    var _useState42 = _slicedToArray(_useState4, 2);
 
-        var emojis = [];
-        for (var i = 0; i < _emojisJson2['default'].length; i++) {
-            for (var j = 0; j < _emojisJson2['default'][i].emojis.length; j++) {
-                if (_emojisJson2['default'][i].emojis[j].code.includes(value)) {
-                    emojis.push(_emojisJson2['default'][i].emojis[j]);
-                }
-            }
-        }
-        var searchEmojiGroup = { title: "Searched", emojis: emojis };
-        console.log(emojis);
+    var searchValue = _useState42[0];
+    var setSearchValue = _useState42[1];
 
-        setActiveEmojiGroup(searchEmojiGroup);
-        setActiveEmojiGroupIndex(-2);
-    }
+    var _useState5 = (0, _react.useState)(getLastUsagedEmojis());
 
-    function fetchLastUsagedEmojis() {
-        var lastUsagedEmojis;
-        return regeneratorRuntime.async(function fetchLastUsagedEmojis$(context$2$0) {
+    var _useState52 = _slicedToArray(_useState5, 2);
+
+    var lastUsedEmojis = _useState52[0];
+    var setLastUsedEmojis = _useState52[1];
+
+    function fetchLastUsedEmojis() {
+        var lastUsedEmojis;
+        return regeneratorRuntime.async(function fetchLastUsedEmojis$(context$2$0) {
             while (1) switch (context$2$0.prev = context$2$0.next) {
                 case 0:
                     context$2$0.next = 2;
                     return regeneratorRuntime.awrap(getLastUsagedEmojis());
 
                 case 2:
-                    lastUsagedEmojis = context$2$0.sent;
+                    lastUsedEmojis = context$2$0.sent;
 
-                    console.log("7878");
-                    console.log(lastUsagedEmojis);
+                    setLastUsedEmojis(lastUsedEmojis);
 
-                    setActiveEmojiGroup(lastUsagedEmojis);
-                    setActiveEmojiGroupIndex(-1);
+                    return context$2$0.abrupt('return', lastUsedEmojis);
 
-                case 7:
+                case 5:
+                case 'end':
+                    return context$2$0.stop();
+            }
+        }, null, this);
+    }
+
+    function clearState() {
+        var lastUsedEmojis;
+        return regeneratorRuntime.async(function clearState$(context$2$0) {
+            while (1) switch (context$2$0.prev = context$2$0.next) {
+                case 0:
+                    context$2$0.next = 2;
+                    return regeneratorRuntime.awrap(fetchLastUsedEmojis());
+
+                case 2:
+                    lastUsedEmojis = context$2$0.sent;
+
+                    if (lastUsedEmojis && lastUsedEmojis.emojis.length != 0) {
+                        setActiveEmojiGroup(lastUsedEmojis);
+                        setActiveEmojiGroupIndex(-1);
+                    } else {
+                        setActiveEmojiGroup(_emojisJson2['default'][0]);
+                        setActiveEmojiGroupIndex(0);
+                    }
+
+                    setSearchValue("");
+
+                    // console.log("State after clear:");
+                    // console.log(lastUsedEmojis);
+
+                case 5:
+                case 'end':
+                    return context$2$0.stop();
+            }
+        }, null, this);
+    }
+
+    function onSearchInputChage(value) {
+        var emojis, i, j, searchEmojiGroup;
+        return regeneratorRuntime.async(function onSearchInputChage$(context$2$0) {
+            while (1) switch (context$2$0.prev = context$2$0.next) {
+                case 0:
+                    setSearchValue(value);
+
+                    if (!(value === "")) {
+                        context$2$0.next = 4;
+                        break;
+                    }
+
+                    clearState();
+                    return context$2$0.abrupt('return');
+
+                case 4:
+                    emojis = [];
+
+                    for (i = 0; i < _emojisJson2['default'].length; i++) {
+                        for (j = 0; j < _emojisJson2['default'][i].emojis.length; j++) {
+                            if (_emojisJson2['default'][i].emojis[j].code.includes(value)) {
+                                emojis.push(_emojisJson2['default'][i].emojis[j]);
+                            }
+                        }
+                    }
+                    searchEmojiGroup = { title: "Search", emojis: emojis };
+
+                    setActiveEmojiGroup(searchEmojiGroup);
+                    setActiveEmojiGroupIndex(-2);
+
+                case 9:
+                case 'end':
+                    return context$2$0.stop();
+            }
+        }, null, this);
+    }
+
+    function emojiButtonClick(emoji, code) {
+        return regeneratorRuntime.async(function emojiButtonClick$(context$2$0) {
+            while (1) switch (context$2$0.prev = context$2$0.next) {
+                case 0:
+                    context$2$0.next = 2;
+                    return regeneratorRuntime.awrap(pickEmoji(emoji, code));
+
+                case 2:
+                    context$2$0.next = 4;
+                    return regeneratorRuntime.awrap(clearState());
+
+                case 4:
                 case 'end':
                     return context$2$0.stop();
             }
@@ -114,10 +195,12 @@ function MyEmojiPicker(_ref) {
                     placeholder: 'Search',
                     className: 'dch-search-box-input',
                     'aria-label': 'Search for an emoji',
+                    value: searchValue,
                     onChange: function (e) {
                         onSearchInputChage(e.target.value);
                     }
-                })
+                }),
+                searchValue !== "" && _react2['default'].createElement(_MyCrossButtonTranspiledJs2['default'], { clearState: clearState })
             ),
             _react2['default'].createElement(
                 'div',
@@ -134,7 +217,8 @@ function MyEmojiPicker(_ref) {
                                 type: 'button',
                                 className: 'dch-dropdown-contents-category dch-default-button dch-btn-default-tertiary ' + (activeEmojiGroupIndex === -1 ? 'dch-emoji-category-active' : ''),
                                 onClick: function () {
-                                    fetchLastUsagedEmojis();
+                                    setActiveEmojiGroup(lastUsedEmojis);
+                                    setActiveEmojiGroupIndex(-1);
                                 }
                             },
                             _react2['default'].createElement(
@@ -301,7 +385,7 @@ function MyEmojiPicker(_ref) {
                 _react2['default'].createElement(
                     'div',
                     null,
-                    _react2['default'].createElement(_MyEmojiPageTranspiledJs2['default'], { title: activeEmojiGroup.title, emojis: activeEmojiGroup.emojis, pickEmoji: pickEmoji })
+                    _react2['default'].createElement(_MyEmojiPageTranspiledJs2['default'], { title: activeEmojiGroup.title, emojis: activeEmojiGroup.emojis, pickEmoji: emojiButtonClick })
                 )
             )
         )
