@@ -9,7 +9,7 @@ import { useState } from 'react'
 import React from "react";
 import ReactDOM from "react-dom";
 
-function MyEmojiPicker({ pickEmoji, getLastUsagedEmojis, initActiveGroup, initActiveGroupIndex, ...props }) {
+function MyEmojiPicker({ pickEmoji, getLastUsagedEmojis, initActiveGroup, initActiveGroupIndex, emojiDiv, ...props }) {
 
     const [activeEmojiGroupIndex, setActiveEmojiGroupIndex] = useState(initActiveGroupIndex)
     const [activeEmojiGroup, setActiveEmojiGroup] = useState(initActiveGroup)
@@ -64,7 +64,7 @@ function MyEmojiPicker({ pickEmoji, getLastUsagedEmojis, initActiveGroup, initAc
     }
 
     async function emojiButtonClick(emoji, code) {
-        await pickEmoji(emoji, code);
+        await pickEmoji(emoji, code, emojiDiv);
         await clearState();
     }
 

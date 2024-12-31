@@ -37,8 +37,9 @@ function MyEmojiPicker(_ref) {
     var getLastUsagedEmojis = _ref.getLastUsagedEmojis;
     var initActiveGroup = _ref.initActiveGroup;
     var initActiveGroupIndex = _ref.initActiveGroupIndex;
+    var emojiDiv = _ref.emojiDiv;
 
-    var props = _objectWithoutProperties(_ref, ['pickEmoji', 'getLastUsagedEmojis', 'initActiveGroup', 'initActiveGroupIndex']);
+    var props = _objectWithoutProperties(_ref, ['pickEmoji', 'getLastUsagedEmojis', 'initActiveGroup', 'initActiveGroupIndex', 'emojiDiv']);
 
     var _useState = (0, _react.useState)(initActiveGroupIndex);
 
@@ -163,7 +164,7 @@ function MyEmojiPicker(_ref) {
             while (1) switch (context$2$0.prev = context$2$0.next) {
                 case 0:
                     context$2$0.next = 2;
-                    return regeneratorRuntime.awrap(pickEmoji(emoji, code));
+                    return regeneratorRuntime.awrap(pickEmoji(emoji, code, emojiDiv));
 
                 case 2:
                     context$2$0.next = 4;

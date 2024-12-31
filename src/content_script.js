@@ -94,6 +94,27 @@ link.type = "text/css";
 link.rel = "stylesheet";
 document.getElementsByTagName("head")[0].appendChild(link);
 
+async function createEmojiPicker(pickEmoji, emojiDiv) {
+    const picker = document.createElement("div");
+    picker.classList.add("dch-dropdown-outer-div");
+    ReactDOM.render(
+        React.createElement(
+            MyEmojiPicker, 
+            { 
+                pickEmoji: pickEmoji, 
+                getLastUsagedEmojis: getLastUsagedEmojisCategory, 
+                initActiveGroup: await getLastUsagedEmojisCategory(), 
+                initActiveGroupIndex: -1,
+                emojiDiv: emojiDiv 
+            }
+        ), 
+        picker
+    );
+    picker.style.display = 'block';
+
+    emojiDiv.appendChild(picker);
+}
+
 async function prepareEditorBlock(editorBlock) {
     // Create emoji button
     const emojiButton = document.createElement("button");
@@ -131,49 +152,43 @@ async function prepareEditorBlock(editorBlock) {
         }
     });
 
-    async function pickEmoji(emoji, code) {
+    async function pickEmoji(emoji, code, emojiDiv) {
         insertEmojiTag({
-            textArea: editorBlock.querySelector('[data-testid="comment-field"]'),
+            textArea: editorBlock.querySelector('textarea'),
             tag: code,
             cursorOffset: 0
         });
 
         await processEmojiUsage(emoji, code);
 
-        picker.style.display = 'none';
+        // Remove picker
+        let dropdownList = emojiDiv.getElementsByClassName("dch-dropdown-outer-div");
+        if (dropdownList.length > 0) {
+            emojiDiv.removeChild(dropdownList[0]);
+        }
     }
 
     // Emoji picker
-    const picker = document.createElement("div");
-    ReactDOM.render(
-        React.createElement(
-            MyEmojiPicker, 
-            { 
-                pickEmoji: pickEmoji, 
-                getLastUsagedEmojis: getLastUsagedEmojisCategory, 
-                initActiveGroup: await getLastUsagedEmojisCategory(), 
-                initActiveGroupIndex: -1 
-            }
-        ), 
-        picker
-    );
-    picker.style.display = 'none';
-    emojiDiv.appendChild(picker);
+    // await createEmojiPicker();
 
     // Logic for emoji button
     emojiButton.addEventListener("click", () => {
+        let dropdownList = emojiDiv.getElementsByClassName("dch-dropdown-outer-div");
 
-        if (picker.style.display === 'none') {
-            picker.style.display = 'block';
+        if (dropdownList.length > 0) {
+            emojiDiv.removeChild(dropdownList[0]);
         } else {
-            picker.style.display = 'none';
+            createEmojiPicker(pickEmoji, emojiDiv);
         }
     });
 
     // Hide emoji picker
     document.addEventListener('click', function (event) {
         if (!emojiDiv.contains(event.target)) {
-            picker.style.display = 'none';
+            let dropdownList = emojiDiv.getElementsByClassName("dch-dropdown-outer-div");
+            if (dropdownList.length > 0) {
+                emojiDiv.removeChild(dropdownList[0]);
+            }
         }
     });
 }
@@ -202,31 +217,28 @@ async function insertEmojiTag({
 }
 
 const insertText = (target, text) => {
+    // console.log("insertText:");
+    // console.log(target);
+
     const { selectionStart, selectionEnd, value } = target;
     const textBefore = value.substring(0, selectionStart);
     const textAfter = value.substring(selectionEnd, value.length);
     const insertedText = text instanceof Function ? text(textBefore, textAfter) : text;
 
-    console.log("insertText:");
-    console.log(value);
-    console.log(target);
+    const newText = textBefore + insertedText + textAfter;
 
-    // if (!execInsertText(insertedText)) {
-        const newText = textBefore + insertedText + textAfter;
+    // eslint-disable-next-line no-param-reassign
+    target.value = newText;
 
-        // eslint-disable-next-line no-param-reassign
-        target.value = newText;
+    // eslint-disable-next-line no-param-reassign
+    target.selectionStart = selectionStart + insertedText.length;
 
-        // eslint-disable-next-line no-param-reassign
-        target.selectionStart = selectionStart + insertedText.length;
+    // eslint-disable-next-line no-param-reassign
+    target.selectionEnd = selectionStart + insertedText.length;
 
-        // eslint-disable-next-line no-param-reassign
-        target.selectionEnd = selectionStart + insertedText.length;
-
-        console.log("insertText inner:");
-        console.log(newText);
-        console.log(target);
-    // }
+    // console.log("insertText inner:");
+    // console.log(newText);
+    // console.log(target);
 
     // Trigger autosave
     target.dispatchEvent(new Event('input'));
@@ -236,17 +248,6 @@ const insertText = (target, text) => {
     event.initEvent('autosize:update', true, false);
     target.dispatchEvent(event);
 };
-
-function execInsertText(text) {
-    if (text !== '') {
-        console.log("exec inertText");
-        console.log(text);
-        return document.execCommand('insertText', false, text);
-    }
-
-    // Nothing to do :)
-    return true;
-}
 
 function moveCursor({
     textArea,
