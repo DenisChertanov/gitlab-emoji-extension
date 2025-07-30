@@ -1,0 +1,56 @@
+{
+    "name": "__MSG_name__",
+    "version": "1.0.0",
+    "manifest_version": 3,
+    "default_locale": "en",
+    "description": "__MSG_description__",
+    "icons": {
+        "32": "./icons/crying_emoji_32.png",
+        "64": "./icons/crying_emoji_64.png",
+        "128": "./icons/crying_emoji_128.png"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "https://gitlab.com/*"
+            ],
+            "run_at": "document_idle",
+            "all_frames": false,
+            "js": [
+                "content_script.js"
+            ]
+        }
+    ],
+    "background": {
+        "service_worker": "service_worker.js",
+        "type": "module"
+    },
+    "permissions": [
+        "storage"
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "content-script.css",
+                "execute.js",
+                "emojis.json",
+                "browser.js",
+                "images/airplane_icon.png",
+                "images/check_mark_icon.png",
+                "images/clock_icon.png",
+                "images/container_icon.png",
+                "images/football_icon.png",
+                "images/group_icon.png",
+                "images/leaf_icon.png",
+                "images/red_flag_icon.png",
+                "images/restaurant_icon.png",
+                "images/search_icon.png",
+                "images/smile_icon.png",
+                "MyEmojiPickerTranspiled.css"
+            ],
+            "matches": [
+                "https://gitlab.com/*"
+            ]
+        }
+    ]
+}

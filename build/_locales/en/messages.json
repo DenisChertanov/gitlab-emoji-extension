@@ -1,0 +1,10 @@
+{
+    "name": {
+        "message": "Emojis for Gitlab",
+        "description": "extension name"
+    },
+    "description": {
+        "message": "Easy way to use emojis in Gitlab text areas",
+        "description": "extension description"
+    }
+}
